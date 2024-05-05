@@ -4,9 +4,37 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    
+    "build": "tsc && tsc-alias",
+    "start": "node ./dist/server.js",
+    "dev": "nodemon --watch ./src/ --exec npx ts-node -r tsconfig-paths/register ./src/server.ts"
   },
   "keywords": [],
   "author": "Caio de Araújo",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.1.1",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.12.7",
+    "@types/node-jose": "^1.1.13",
+    "@types/speakeasy": "^2.0.10",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.1.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.7.1"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^8.0.0",
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "node-jose": "^2.2.0",
+    "prisma": "^5.13.0",
+    "speakeasy": "^2.0.0"
+  }
 }

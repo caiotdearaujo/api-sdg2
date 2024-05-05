@@ -1,0 +1,28 @@
+node_modules
+dist
+.env
+.DS_Store
+*.log
+
+# Prisma
+/prisma/.env
+/prisma/.prisma
+/prisma/migrations
+
+# IDE/Editor specific
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs
+*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+pids
+logs
+results
