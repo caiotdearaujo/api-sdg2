@@ -1,0 +1,12 @@
+{
+  "name": "api-sdg2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/server.js",
+  "scripts": {
+    
+  },
+  "keywords": [],
+  "author": "Caio de Araújo",
+  "license": "MIT"
+}
