@@ -18,7 +18,6 @@ interface SuccessBody {
 interface ErrorBody {
   error: {
     message: string
-    details: string
   }
 }
 
@@ -128,10 +127,10 @@ export default class ConventionalReply {
     if (
       (this._code.type === 'client error' ||
         this._code.type === 'server error') &&
-      !('error' in body && 'message' in body.error && 'details' in body.error)
+      !('error' in body && 'message' in body.error)
     ) {
       throw new ErrorBodyError(
-        "Body must have 'error' object property with 'message' and 'details' string properties"
+        "Body must have 'error' object property with 'message' string property"
       )
     }
   }
