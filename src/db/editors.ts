@@ -18,10 +18,25 @@ const passwordValid = (password: string): boolean => {
   )
 }
 
-const userExists = async (username: string): Promise<boolean> => {
-  const user = await prisma.editor.findUnique({ where: { username } })
+const userExists = async (params: {
+  id?: string
+  username?: string
+}): Promise<boolean> => {
+  const { id, username } = params
 
-  return user !== null
+  if (id) {
+    const user = await prisma.editor.findUnique({ where: { id } })
+
+    return user !== null
+  }
+
+  if (username) {
+    const user = await prisma.editor.findUnique({ where: { username } })
+
+    return user !== null
+  }
+
+  throw new Error('No identifier provided')
 }
 
 const generateId = (): string => {
@@ -49,7 +64,7 @@ const addEditor = async (
     })
   }
 
-  if (await userExists(username)) {
+  if (await userExists({ username })) {
     return new ConventionalReply(400, {
       error: { message: 'User already exists' },
     })
@@ -63,4 +78,16 @@ const addEditor = async (
   return new ConventionalReply(201, { data: {} })
 }
 
-export { addEditor }
+const deleteEditor = async (id: string): Promise<ConventionalReply> => {
+  if (!userExists({ id })) {
+    return new ConventionalReply(404, {
+      error: { message: 'User not found' },
+    })
+  }
+
+  prisma.editor.delete({ where: { id } })
+
+  return new ConventionalReply(204, { data: {} })
+}
+
+export { addEditor, deleteEditor }

@@ -6,6 +6,11 @@ import * as editors from './controllers/editors'
 server.get('/ping', ping.getController)
 
 server.post('/editors', { schema: editors.postSchema }, editors.postController)
+server.delete(
+  '/editors',
+  { schema: editors.deleteSchema },
+  editors.deleteController
+)
 
 const start = async () => {
   try {
