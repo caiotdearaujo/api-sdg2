@@ -1,7 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { addEditor, deleteEditor } from '@/db/editor'
 import { decodeToken } from '@/cryptography/jwt'
-import { extractToken } from '@/auth/headers'
+import {
+  AuthenticationHeaders,
+  authenticationSchema,
+  extractToken,
+} from '@/auth/headers'
 
 interface PostBody {
   username: string
@@ -9,6 +13,7 @@ interface PostBody {
 }
 
 const postSchema = {
+  ...authenticationSchema,
   body: {
     type: 'object',
     required: ['username', 'password'],
@@ -20,7 +25,7 @@ const postSchema = {
 }
 
 const postController = async (
-  request: FastifyRequest<{ Body: PostBody }>,
+  request: FastifyRequest<{ Headers: AuthenticationHeaders; Body: PostBody }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { username, password } = request.body
@@ -28,19 +33,9 @@ const postController = async (
   return result.send(reply)
 }
 
-interface DeleteHeaders {
-  authorization: string
-}
+type DeleteHeaders = AuthenticationHeaders
 
-const deleteSchema = {
-  headers: {
-    type: 'object',
-    required: ['authorization'],
-    properties: {
-      authorization: { type: 'string' },
-    },
-  },
-}
+const deleteSchema = authenticationSchema
 
 const deleteController = async (
   request: FastifyRequest<{ Headers: DeleteHeaders }>,

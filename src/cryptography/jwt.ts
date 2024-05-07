@@ -2,9 +2,12 @@ import { JWE, JWK } from 'node-jose'
 import server from '@/fastify-instance'
 
 let key: JWK.Key
-;(async () => {
+
+const generateKey = async () => {
   key = await JWK.createKey('oct', 256, { alg: 'A256GCM' })
-})()
+}
+
+generateKey()
 
 const createToken = async (id: string) => {
   const jwt = server.jwt.sign({ id })

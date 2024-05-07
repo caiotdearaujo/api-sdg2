@@ -4,6 +4,16 @@ interface AuthenticationHeaders {
   authorization: string
 }
 
+const authenticationSchema = {
+  headers: {
+    type: 'object',
+    required: ['authorization'],
+    properties: {
+      authorization: { type: 'string' },
+    },
+  },
+}
+
 const extractToken = <
   R extends FastifyRequest<{ Headers: AuthenticationHeaders }>,
 >(
@@ -18,4 +28,4 @@ const extractToken = <
   return auth.replace('Bearer ', '')
 }
 
-export { AuthenticationHeaders, extractToken }
+export { AuthenticationHeaders, authenticationSchema, extractToken }

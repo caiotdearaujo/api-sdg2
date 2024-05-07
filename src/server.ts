@@ -3,15 +3,20 @@ import prisma from './prisma-instance'
 import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
+import authByJWT from './auth/jwt'
 
 // ping
 server.get('/ping', ping.getController)
 
 // editors
-server.post('/editor', { schema: editors.postSchema }, editors.postController)
+server.post(
+  '/editor',
+  { schema: editors.postSchema, preHandler: authByJWT },
+  editors.postController
+)
 server.delete(
   '/editor',
-  { schema: editors.deleteSchema },
+  { schema: editors.deleteSchema, preHandler: authByJWT },
   editors.deleteController
 )
 
