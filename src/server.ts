@@ -1,17 +1,24 @@
 import server from './fastify-instance'
 import prisma from './prisma-instance'
 import * as ping from './controllers/ping'
-import * as editors from './controllers/editors'
+import * as editors from './controllers/editor'
+import * as login from './controllers/login'
 
+// ping
 server.get('/ping', ping.getController)
 
-server.post('/editors', { schema: editors.postSchema }, editors.postController)
+// editors
+server.post('/editor', { schema: editors.postSchema }, editors.postController)
 server.delete(
-  '/editors',
+  '/editor',
   { schema: editors.deleteSchema },
   editors.deleteController
 )
 
+// login
+server.post('/login', { schema: login.postSchema }, login.postController)
+
+// server setup
 const start = async () => {
   try {
     await prisma.$connect()

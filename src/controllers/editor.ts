@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { addEditor, deleteEditor } from '@/db/editors'
+import { addEditor, deleteEditor } from '@/db/editor'
 import { decodeToken } from '@/cryptography/jwt'
 import { extractToken } from '@/auth/headers'
 
