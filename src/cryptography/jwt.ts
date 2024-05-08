@@ -19,7 +19,7 @@ const createToken = async (id: string) => {
   return token
 }
 
-const getIdByJWT = (jwt: string): string => {
+const getIdFromJWT = (jwt: string): string => {
   const decoded = server.jwt.decode(jwt) as { id: string }
   return decoded.id
 }
@@ -27,29 +27,27 @@ const getIdByJWT = (jwt: string): string => {
 const verifyToken = async (
   token: string
 ): Promise<void | ConventionalReply> => {
-  const result = await JWE.createDecrypt(key).decrypt(token)
-  const jwt = result.plaintext.toString()
+  let jwt: string
 
   try {
+    const result = await JWE.createDecrypt(key).decrypt(token)
+    jwt = result.plaintext.toString()
     server.jwt.verify(jwt)
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error(err)
-    }
+  } catch {
     return new ConventionalReply(401, { error: { message: 'Unauthorized' } })
   }
 
-  const id = getIdByJWT(jwt)
+  const id = getIdFromJWT(jwt)
 
   if (!(await userExists({ id }))) {
     return new ConventionalReply(401, { error: { message: 'User deleted' } })
   }
 }
 
-const decodeToken = async (token: string) => {
+const decodeToken = async (token: string): Promise<string> => {
   const result = await JWE.createDecrypt(key).decrypt(token)
   const jwt = result.plaintext.toString()
-  return getIdByJWT(jwt)
+  return getIdFromJWT(jwt)
 }
 
 export { createToken, verifyToken, decodeToken }
