@@ -18,12 +18,10 @@ const authByJWT = async <
     }).send(reply)
   }
 
-  try {
-    await verifyToken(token)
-  } catch {
-    return new ConventionalReply(401, {
-      error: { message: 'Unauthorized' },
-    }).send(reply)
+  const result = await verifyToken(token)
+
+  if (result instanceof ConventionalReply) {
+    return result.send(reply)
   }
 }
 

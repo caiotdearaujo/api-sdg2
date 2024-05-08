@@ -1,5 +1,7 @@
 import { JWE, JWK } from 'node-jose'
 import server from '@/fastify-instance'
+import { userExists } from '@/db/editor'
+import ConventionalReply from '@/reply-convention'
 
 let key: JWK.Key
 
@@ -17,17 +19,37 @@ const createToken = async (id: string) => {
   return token
 }
 
-const verifyToken = async (token: string) => {
+const getIdByJWT = (jwt: string): string => {
+  const decoded = server.jwt.decode(jwt) as { id: string }
+  return decoded.id
+}
+
+const verifyToken = async (
+  token: string
+): Promise<void | ConventionalReply> => {
   const result = await JWE.createDecrypt(key).decrypt(token)
   const jwt = result.plaintext.toString()
-  server.jwt.verify(jwt)
+
+  try {
+    server.jwt.verify(jwt)
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(err)
+    }
+    return new ConventionalReply(401, { error: { message: 'Unauthorized' } })
+  }
+
+  const id = getIdByJWT(jwt)
+
+  if (!(await userExists({ id }))) {
+    return new ConventionalReply(401, { error: { message: 'User deleted' } })
+  }
 }
 
 const decodeToken = async (token: string) => {
   const result = await JWE.createDecrypt(key).decrypt(token)
   const jwt = result.plaintext.toString()
-  const decodedToken = server.jwt.decode(jwt) as { id: string }
-  return decodedToken.id
+  return getIdByJWT(jwt)
 }
 
 export { createToken, verifyToken, decodeToken }

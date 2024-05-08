@@ -131,4 +131,4 @@ const login = async (
   return new ConventionalReply(200, { data: { token } })
 }
 
-export { addEditor, deleteEditor, login }
+export { addEditor, deleteEditor, login, userExists }
