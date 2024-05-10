@@ -1,10 +1,10 @@
-import { FastifyRequest } from 'fastify'
+import { FastifyRequest, FastifySchema } from 'fastify'
 
 interface AuthenticationHeaders {
   authorization: string
 }
 
-const authenticationSchema = {
+const authenticationSchema: FastifySchema = {
   headers: {
     type: 'object',
     required: ['authorization'],

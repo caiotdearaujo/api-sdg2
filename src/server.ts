@@ -1,9 +1,10 @@
 import server from './fastify-instance'
 import prisma from './prisma-instance'
+import authByJWT from './auth/jwt'
 import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
-import authByJWT from './auth/jwt'
+import * as questions from './controllers/questions'
 
 // ping
 server.get('/ping', ping.getController)
@@ -22,6 +23,13 @@ server.delete(
 
 // login
 server.post('/login', { schema: login.postSchema }, login.postController)
+
+// questions
+server.get(
+  '/questions',
+  { schema: questions.getSchema },
+  questions.getController
+)
 
 // server setup
 const start = async () => {

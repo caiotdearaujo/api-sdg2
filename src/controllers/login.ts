@@ -1,12 +1,12 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
-import { login } from '@/db/editor'
+import { FastifyRequest, FastifyReply, FastifySchema } from 'fastify'
+import { login } from '@/services/editor'
 
 interface PostBody {
   username: string
   password: string
 }
 
-const postSchema = {
+const postSchema: FastifySchema = {
   body: {
     type: 'object',
     required: ['username', 'password'],

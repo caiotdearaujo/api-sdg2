@@ -1,6 +1,6 @@
 import { JWE, JWK } from 'node-jose'
 import server from '@/fastify-instance'
-import { userExists } from '@/db/editor'
+import { userExists } from '@/services/editor'
 import ConventionalReply from '@/reply-convention'
 
 let key: JWK.Key

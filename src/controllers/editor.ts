@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
-import { addEditor, deleteEditor } from '@/db/editor'
+import { FastifyReply, FastifyRequest, FastifySchema } from 'fastify'
+import { addEditor, deleteEditor } from '@/services/editor'
 import { decodeToken } from '@/cryptography/jwt'
 import {
   AuthenticationHeaders,
@@ -12,7 +12,7 @@ interface PostBody {
   password: string
 }
 
-const postSchema = {
+const postSchema: FastifySchema = {
   ...authenticationSchema,
   body: {
     type: 'object',
@@ -35,7 +35,7 @@ const postController = async (
 
 type DeleteHeaders = AuthenticationHeaders
 
-const deleteSchema = authenticationSchema
+const deleteSchema: FastifySchema = authenticationSchema
 
 const deleteController = async (
   request: FastifyRequest<{ Headers: DeleteHeaders }>,
