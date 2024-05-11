@@ -5,7 +5,7 @@ import { time } from 'console'
 type questionsAndAnswersType = {
   id: number
   title: string
-  editorUsername: string
+  lastEditorUsername: string
   level: number
   answers: {
     id: number
@@ -131,7 +131,7 @@ const addQuestion = async (
   const newQuestion = await prisma.question.create({
     data: {
       title,
-      editor: { connect: { id: editorId } },
+      lastEditor: { connect: { id: editorId } },
       answers: { createMany: { data: answers } },
       level,
       time,
