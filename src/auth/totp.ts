@@ -6,6 +6,14 @@ import speakeasy from 'speakeasy'
 
 dotenv.config()
 
+/**
+ * Authenticates the request using Time-based One-Time Password (TOTP).
+ *
+ * @template R - The type of the Fastify request object.
+ * @param {R} request - The Fastify request object.
+ * @param {FastifyReply} reply - The Fastify reply object.
+ * @returns {Promise<void | FastifyReply>} - A promise that resolves to void or a Fastify reply object.
+ */
 const authByTOTP = async <
   R extends FastifyRequest<{ Headers: AuthenticationHeaders }>,
 >(

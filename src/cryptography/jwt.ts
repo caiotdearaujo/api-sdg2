@@ -11,6 +11,11 @@ const generateKey = async () => {
 
 generateKey()
 
+/**
+ * Creates a JWT token for the given user ID.
+ * @param id - The user ID.
+ * @returns The JWT token.
+ */
 const createToken = async (id: string) => {
   const jwt = server.jwt.sign({ id })
   const token = await JWE.createEncrypt({ format: 'compact' }, key)
@@ -24,6 +29,12 @@ const getIdFromJWT = (jwt: string): string => {
   return decoded.id
 }
 
+/**
+ * Verifies the authenticity of a JSON Web Token (JWT).
+ *
+ * @param token - The JWT to be verified.
+ * @returns A Promise that resolves to void or a ConventionalReply object.
+ */
 const verifyToken = async (
   token: string
 ): Promise<void | ConventionalReply> => {
@@ -44,6 +55,11 @@ const verifyToken = async (
   }
 }
 
+/**
+ * Decodes a JWT token and returns the ID extracted from it.
+ * @param token The JWT token to decode.
+ * @returns A Promise that resolves to the ID extracted from the JWT token, or an empty string if decoding fails.
+ */
 const decodeToken = async (token: string): Promise<string> => {
   try {
     const result = await JWE.createDecrypt(key).decrypt(token)

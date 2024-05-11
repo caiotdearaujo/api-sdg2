@@ -14,6 +14,13 @@ const authenticationSchema: FastifySchema = {
   },
 }
 
+/**
+ * Extracts the token from the authorization header of a Fastify request.
+ *
+ * @template R - The type of the Fastify request object.
+ * @param {R} request - The Fastify request object.
+ * @returns {string | null} - The extracted token or null if the authorization header is missing or invalid.
+ */
 const extractToken = <
   R extends FastifyRequest<{ Headers: AuthenticationHeaders }>,
 >(

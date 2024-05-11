@@ -23,6 +23,9 @@ interface ErrorBody {
 
 type ReplyBody = InfoOrRedirectBody | SuccessBody | ErrorBody
 
+/**
+ * Represents an HTTP status code.
+ */
 class HTTPCode {
   private static readonly HTTP_INFO = 100
   private static readonly HTTP_SUCCESS = 200
@@ -33,6 +36,11 @@ class HTTPCode {
   private _code: number
   private _type: HTTPCodeType
 
+  /**
+   * Creates an instance of the HTTPCode class.
+   * @param code - The HTTP status code.
+   * @throws {TypeError} If the code is not in the range 100 to 599.
+   */
   constructor(code: number) {
     if (Number.isInteger(code) && code >= 100 && code < 600) {
       this._code = code
@@ -73,10 +81,16 @@ class HTTPCode {
     throw Error('Invalid HTTP code')
   }
 
+  /**
+   * Gets the HTTP status code.
+   */
   public get code() {
     return this._code
   }
 
+  /**
+   * Gets the type of the HTTP status code.
+   */
   public get type() {
     return this._type
   }
@@ -100,10 +114,18 @@ class ErrorBodyError extends Error {
   }
 }
 
+/**
+ * Represents a conventional reply object.
+ */
 export default class ConventionalReply {
   private _code: HTTPCode
   private _body: ReplyBody
 
+  /**
+   * Creates a new ConventionalReply instance.
+   * @param code The HTTP status code.
+   * @param body The reply body.
+   */
   constructor(code: number, body: ReplyBody) {
     this._code = new HTTPCode(code)
 
@@ -112,6 +134,13 @@ export default class ConventionalReply {
     this._body = body
   }
 
+  /**
+   * Validates the reply body based on the HTTP status code.
+   * @param body The reply body to validate.
+   * @throws {InfoOrRedirectBodyError} If the body is missing the 'message' property for info or redirect codes.
+   * @throws {SuccessBodyError} If the body is missing the 'data' property for success codes.
+   * @throws {ErrorBodyError} If the body is missing the 'error' property with 'message' property for error codes.
+   */
   private _validateBody(body: ReplyBody) {
     if (
       (this._code.type === 'info' || this._code.type === 'redirect') &&
@@ -135,6 +164,11 @@ export default class ConventionalReply {
     }
   }
 
+  /**
+   * Sends the reply using the provided FastifyReply object.
+   * @param reply The FastifyReply object to send the reply.
+   * @returns The FastifyReply object.
+   */
   public send(reply: FastifyReply) {
     return reply.code(this._code.code).send(this._body)
   }

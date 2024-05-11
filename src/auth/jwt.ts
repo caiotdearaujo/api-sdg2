@@ -3,6 +3,14 @@ import { AuthenticationHeaders, extractToken } from './headers'
 import { verifyToken } from '@/cryptography/jwt'
 import ConventionalReply from '@/reply-convention'
 
+/**
+ * Authenticates the request using JSON Web Tokens (JWT).
+ *
+ * @template R - The type of the Fastify request object.
+ * @param {R} request - The Fastify request object.
+ * @param {FastifyReply} reply - The Fastify reply object.
+ * @returns {Promise<void | FastifyReply>} - A promise that resolves to void or a Fastify reply object.
+ */
 const authByJWT = async <
   R extends FastifyRequest<{ Headers: AuthenticationHeaders }>,
 >(

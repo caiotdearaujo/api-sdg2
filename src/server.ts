@@ -7,37 +7,50 @@ import * as login from './controllers/login'
 import * as questions from './controllers/questions'
 import authByTOTP from './auth/totp'
 
-// ping
+// /ping
+
 server.get('/ping', ping.getController)
 
-// editors
+// /editor
+
 server.post(
   '/editor',
   { schema: editors.postSchema, preHandler: authByJWT },
   editors.postController
 )
+
 server.delete(
   '/editor',
   { schema: editors.deleteSchema, preHandler: authByJWT },
   editors.deleteController
 )
 
-// login
+// /login
+
 server.post('/login', { schema: login.postSchema }, login.postController)
 
-// questions
+// /questions
+
 server.get(
   '/questions',
   { schema: questions.getSchema, preHandler: authByTOTP },
   questions.getController
 )
+
 server.post(
   '/questions',
   { schema: questions.postSchema, preHandler: authByJWT },
   questions.postController
 )
 
+server.put(
+  '/questions',
+  { schema: questions.putSchema, preHandler: authByJWT },
+  questions.putController
+)
+
 // server setup
+
 const start = async () => {
   try {
     await prisma.$connect()
