@@ -12,6 +12,7 @@ dotenv.config()
 
 // /ping
 
+server.get('/', ping.getController)
 server.get('/ping', ping.getController)
 
 // /editor
