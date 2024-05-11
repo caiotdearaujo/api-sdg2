@@ -1,11 +1,14 @@
 import server from './fastify-instance'
 import prisma from './prisma-instance'
+import dotenv from 'dotenv'
 import authByJWT from './auth/jwt'
+import authByTOTP from './auth/totp'
 import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
 import * as questions from './controllers/questions'
-import authByTOTP from './auth/totp'
+
+dotenv.config()
 
 // /ping
 
@@ -62,7 +65,7 @@ server.delete(
 const start = async () => {
   try {
     await prisma.$connect()
-    await server.listen({ port: 3000 })
+    await server.listen({ port: Number(process.env.PORT) ?? 3000 })
   } catch (err) {
     server.log.error(err)
     process.exit(1)
