@@ -5,6 +5,7 @@ import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
 import * as questions from './controllers/questions'
+import authByTOTP from './auth/totp'
 
 // ping
 server.get('/ping', ping.getController)
@@ -27,7 +28,7 @@ server.post('/login', { schema: login.postSchema }, login.postController)
 // questions
 server.get(
   '/questions',
-  { schema: questions.getSchema },
+  { schema: questions.getSchema, preHandler: authByTOTP },
   questions.getController
 )
 

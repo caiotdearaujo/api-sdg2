@@ -21,13 +21,13 @@ model Editor {
 }
 
 model Question {
-  id       Int      @id @default(autoincrement())
-  title    String   @db.VarChar(1024)
-  editor   Editor   @relation(fields: [editorId], references: [id])
-  editorId String   @db.Char(32)
-  answers  Answer[]
-  level    Int
-  time     Int
+  id             Int      @id @default(autoincrement())
+  title          String   @db.VarChar(1024)
+  editor         Editor   @relation(fields: [editorUsername], references: [username])
+  editorUsername String   @db.Char(64)
+  answers        Answer[]
+  level          Int
+  time           Int
 }
 
 model Answer {

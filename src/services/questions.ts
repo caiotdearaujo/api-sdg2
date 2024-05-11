@@ -4,7 +4,7 @@ import prisma from '@/prisma-instance'
 type questionsAndAnswersType = {
   id: number
   title: string
-  editorId: string
+  editorUsername: string
   level: number
   answers: {
     id: number
