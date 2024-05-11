@@ -45,9 +45,13 @@ const verifyToken = async (
 }
 
 const decodeToken = async (token: string): Promise<string> => {
-  const result = await JWE.createDecrypt(key).decrypt(token)
-  const jwt = result.plaintext.toString()
-  return getIdFromJWT(jwt)
+  try {
+    const result = await JWE.createDecrypt(key).decrypt(token)
+    const jwt = result.plaintext.toString()
+    return getIdFromJWT(jwt)
+  } catch {
+    return ''
+  }
 }
 
 export { createToken, verifyToken, decodeToken }

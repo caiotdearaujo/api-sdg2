@@ -1,5 +1,6 @@
 import ConventionalReply from '@/reply-convention'
 import prisma from '@/prisma-instance'
+import { time } from 'console'
 
 type questionsAndAnswersType = {
   id: number
@@ -17,6 +18,10 @@ type questionsAndAnswersType = {
 
 const verifyLevel = (level: number): boolean => {
   return [1, 2, 3, 4].includes(level)
+}
+
+const verifyTime = (time: number): boolean => {
+  return time > 0
 }
 
 const getQuestionById = async (id: number): Promise<ConventionalReply> => {
@@ -100,4 +105,42 @@ const getQuestions = async (filters: {
   })
 }
 
-export { getQuestions }
+const addQuestion = async (
+  question: {
+    title: string
+    answers: { content: string; correct: boolean }[]
+    level: number
+    time: number
+  },
+  editorId: string
+): Promise<ConventionalReply> => {
+  const { title, answers, level, time } = question
+
+  if (!verifyLevel(level)) {
+    return new ConventionalReply(400, {
+      error: { message: 'Invalid level' },
+    })
+  }
+
+  if (!verifyTime(time)) {
+    return new ConventionalReply(400, {
+      error: { message: 'Invalid time' },
+    })
+  }
+
+  const newQuestion = await prisma.question.create({
+    data: {
+      title,
+      editor: { connect: { id: editorId } },
+      answers: { createMany: { data: answers } },
+      level,
+      time,
+    },
+  })
+
+  return new ConventionalReply(201, {
+    data: { question: { id: newQuestion.id } },
+  })
+}
+
+export { getQuestions, addQuestion }

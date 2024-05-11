@@ -31,6 +31,11 @@ server.get(
   { schema: questions.getSchema, preHandler: authByTOTP },
   questions.getController
 )
+server.post(
+  '/questions',
+  { schema: questions.postSchema, preHandler: authByJWT },
+  questions.postController
+)
 
 // server setup
 const start = async () => {
