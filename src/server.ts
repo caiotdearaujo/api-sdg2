@@ -44,10 +44,18 @@ server.post(
 )
 
 server.put(
-  '/questions',
+  '/questions/:id',
   { schema: questions.putSchema, preHandler: authByJWT },
   questions.putController
 )
+
+server.delete(
+  '/questions/:id',
+  { schema: questions.deleteSchema, preHandler: authByJWT },
+  questions.deleteController
+)
+
+// /ranking
 
 // server setup
 

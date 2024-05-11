@@ -1,5 +1,10 @@
 import { FastifyReply, FastifyRequest, FastifySchema } from 'fastify'
-import { getQuestions, addQuestion, updateQuestion } from '@/services/questions'
+import {
+  getQuestions,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+} from '@/services/questions'
 import {
   AuthenticationHeaders,
   authenticationSchema,
@@ -99,8 +104,11 @@ const postController = async (
   return result.send(reply)
 }
 
-interface PutBody {
+interface PutParams {
   id: number
+}
+
+interface PutBody {
   title: string
   answers: { id: number; content: string; correct: boolean }[]
   level: number
@@ -109,11 +117,17 @@ interface PutBody {
 
 const putSchema: FastifySchema = {
   ...authenticationSchema,
-  body: {
+  params: {
     type: 'object',
-    required: ['id', 'title', 'answers', 'level', 'time'],
+    required: ['id'],
     properties: {
       id: { type: 'number' },
+    },
+  },
+  body: {
+    type: 'object',
+    required: ['title', 'answers', 'level', 'time'],
+    properties: {
       title: { type: 'string' },
       answers: {
         type: 'array',
@@ -141,7 +155,11 @@ const putSchema: FastifySchema = {
  * @returns A Promise that resolves to the Fastify reply.
  */
 const putController = async (
-  request: FastifyRequest<{ Headers: AuthenticationHeaders; Body: PutBody }>,
+  request: FastifyRequest<{
+    Headers: AuthenticationHeaders
+    Params: PutParams
+    Body: PutBody
+  }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const token = extractToken(request)
@@ -151,9 +169,38 @@ const putController = async (
   }
 
   const id = await decodeToken(token)
-  const question = request.body
+  const questionId = request.params.id
+  const questionContent = request.body
+  const question = { id: questionId, ...questionContent }
 
   const result = await updateQuestion(question, id)
+  return result.send(reply)
+}
+
+interface DeleteParams {
+  id: number
+}
+
+const deleteSchema: FastifySchema = {
+  ...authenticationSchema,
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: { type: 'number' },
+    },
+  },
+}
+
+const deleteController = async (
+  request: FastifyRequest<{
+    Headers: AuthenticationHeaders
+    Params: DeleteParams
+  }>,
+  reply: FastifyReply
+): Promise<FastifyReply> => {
+  const id = request.params.id
+  const result = await deleteQuestion(id)
   return result.send(reply)
 }
 
@@ -164,4 +211,6 @@ export {
   postController,
   putSchema,
   putController,
+  deleteSchema,
+  deleteController,
 }

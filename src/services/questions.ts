@@ -50,29 +50,6 @@ const questionExists = async (id: number): Promise<boolean> => {
 }
 
 /**
- * Checks if all the answers with the given IDs are associated with the specified question.
- *
- * @param ids - An array of answer IDs.
- * @param questionId - The ID of the question to check against.
- * @returns A Promise that resolves to a boolean indicating whether all the answers are from the question.
- */
-const answersAreFromQuestion = async (
-  ids: number[],
-  questionId: number
-): Promise<boolean> => {
-  for (const id of ids) {
-    const answer = await prisma.answer.findUnique({
-      where: { id },
-    })
-
-    if (!answer || answer.questionId !== questionId) {
-      return false
-    }
-  }
-  return true
-}
-
-/**
  * Retrieves a question by its ID.
  *
  * @param id - The ID of the question to retrieve.
@@ -262,12 +239,7 @@ const updateQuestion = async (
     })
   }
 
-  if (!(await answersAreFromQuestion(answersIds, id))) {
-    return new ConventionalReply(404, {
-      error: { message: 'Answer(s) not found' },
-    })
-  }
-
+  await prisma.answer.deleteMany({ where: { questionId: id } })
   await prisma.question.update({
     where: { id },
     data: {
@@ -279,13 +251,30 @@ const updateQuestion = async (
   })
 
   for (const answer of answers) {
-    await prisma.answer.update({
-      where: { id: answer.id },
-      data: { content: answer.content, correct: answer.correct },
+    await prisma.answer.create({
+      data: {
+        id: answer.id,
+        content: answer.content,
+        correct: answer.correct,
+        questionId: id,
+      },
     })
   }
 
   return new ConventionalReply(204, { data: {} })
 }
 
-export { getQuestions, addQuestion, updateQuestion }
+const deleteQuestion = async (id: number): Promise<ConventionalReply> => {
+  if (!(await questionExists(id))) {
+    return new ConventionalReply(404, {
+      error: { message: 'Question not found' },
+    })
+  }
+
+  await prisma.answer.deleteMany({ where: { questionId: id } })
+  await prisma.question.delete({ where: { id } })
+
+  return new ConventionalReply(204, { data: {} })
+}
+
+export { getQuestions, addQuestion, updateQuestion, deleteQuestion }
