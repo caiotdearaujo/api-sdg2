@@ -65,7 +65,7 @@ server.delete(
 const start = async () => {
   try {
     await prisma.$connect()
-    await server.listen({ port: Number(process.env.PORT) ?? 3000 })
+    await server.listen({ port: Number(process.env.PORT) || 3000 })
   } catch (err) {
     server.log.error(err)
     process.exit(1)
