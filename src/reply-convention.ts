@@ -38,6 +38,7 @@ class HTTPCode {
 
   /**
    * Creates an instance of the HTTPCode class.
+   *
    * @param code - The HTTP status code.
    * @throws {TypeError} If the code is not in the range 100 to 599.
    */
@@ -123,6 +124,7 @@ export default class ConventionalReply {
 
   /**
    * Creates a new ConventionalReply instance.
+   *
    * @param code The HTTP status code.
    * @param body The reply body.
    */
@@ -136,6 +138,7 @@ export default class ConventionalReply {
 
   /**
    * Validates the reply body based on the HTTP status code.
+   *
    * @param body The reply body to validate.
    * @throws {InfoOrRedirectBodyError} If the body is missing the 'message' property for info or redirect codes.
    * @throws {SuccessBodyError} If the body is missing the 'data' property for success codes.
@@ -166,6 +169,7 @@ export default class ConventionalReply {
 
   /**
    * Sends the reply using the provided FastifyReply object.
+   *
    * @param reply The FastifyReply object to send the reply.
    * @returns The FastifyReply object.
    */

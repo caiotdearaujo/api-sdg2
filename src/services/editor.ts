@@ -54,6 +54,7 @@ const passwordValid = (password: string): boolean => {
 
 /**
  * Checks if a user exists based on the provided identifier.
+ *
  * @param params - The parameters for the user identification.
  * @param params.id - The user ID.
  * @param params.username - The username.
@@ -136,6 +137,7 @@ const addEditor = async (
 
 /**
  * Deletes an editor by its ID.
+ *
  * @param id - The ID of the editor to delete.
  * @returns A promise that resolves to a `ConventionalReply` object.
  */

@@ -13,6 +13,7 @@ generateKey()
 
 /**
  * Creates a JWT token for the given user ID.
+ *
  * @param id - The user ID.
  * @returns The JWT token.
  */
@@ -57,6 +58,7 @@ const verifyToken = async (
 
 /**
  * Decodes a JWT token and returns the ID extracted from it.
+ *
  * @param token The JWT token to decode.
  * @returns A Promise that resolves to the ID extracted from the JWT token, or an empty string if decoding fails.
  */
