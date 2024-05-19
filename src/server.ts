@@ -7,6 +7,7 @@ import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
 import * as questions from './controllers/questions'
+import * as ranking from './controllers/ranking'
 
 dotenv.config()
 
@@ -61,12 +62,20 @@ server.delete(
 
 // /ranking
 
+server.get(
+  '/ranking',
+  { schema: ranking.getSchema, preHandler: authByTOTP },
+  ranking.getController
+)
+
 // server setup
 
 const start = async () => {
   try {
     await prisma.$connect()
-    await server.listen({ port: Number(process.env.PORT) || 3000 })
+    await server.listen({
+      port: process.env.PORT ? Number(process.env.PORT) : 3000,
+    })
   } catch (err) {
     server.log.error(err)
     process.exit(1)

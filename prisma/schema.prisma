@@ -39,8 +39,8 @@ model Answer {
 }
 
 model Ranking {
-  id        Int    @id @default(autoincrement())
-  name      String
-  turma     String
-  pontuacao Int
+  position      Int    @id @default(autoincrement())
+  name          String @db.VarChar(64)
+  gradeAndClass String @db.Char(2)
+  points        Int
 }
