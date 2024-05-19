@@ -1,6 +1,5 @@
 import { FastifySchema, FastifyRequest, FastifyReply } from 'fastify'
 import { getRanking } from '@/services/ranking'
-import { authenticationSchema, AuthenticationHeaders } from '@/auth/headers'
 
 interface GetQueryString {
   position?: number
@@ -12,7 +11,6 @@ interface GetQueryString {
 }
 
 const getSchema: FastifySchema = {
-  ...authenticationSchema,
   querystring: {
     type: 'object',
     properties: {
@@ -28,7 +26,6 @@ const getSchema: FastifySchema = {
 
 const getController = async (
   request: FastifyRequest<{
-    Headers: AuthenticationHeaders
     Querystring: GetQueryString
   }>,
   reply: FastifyReply
