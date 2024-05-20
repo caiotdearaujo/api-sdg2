@@ -47,34 +47,37 @@ const addRanking = async (
 
   const positionsAndPoints = await prisma.ranking.findMany({
     select: { position: true, score: true },
+    orderBy: { position: 'asc' },
   })
 
   let rightPosition = 0
 
-  for (let i of positionsAndPoints) {
-    if (score > i.score) {
-      rightPosition = i.position
+  for (const positionAndPoint of positionsAndPoints) {
+    if (positionAndPoint.score < score) {
+      rightPosition = positionAndPoint.position
       break
     }
   }
 
-  if (!rightPosition) {
-    rightPosition = positionsAndPoints.length + 1
-  }
-
-  for (let i = positionsAndPoints.length; i >= rightPosition; i--) {
+  for (
+    let i = positionsAndPoints[positionsAndPoints.length - 1].position;
+    i >= rightPosition;
+    i--
+  ) {
     await prisma.ranking.update({
       where: { position: i },
-      data: { position: i + 1 },
+      data: {
+        position: i + 1,
+      },
     })
   }
 
-  prisma.ranking.create({
+  await prisma.ranking.create({
     data: {
-      position: rightPosition,
       name,
       gradeAndClass,
       score,
+      position: rightPosition,
     },
   })
 
