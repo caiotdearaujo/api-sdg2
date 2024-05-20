@@ -62,7 +62,11 @@ server.delete(
 
 // /ranking
 
-server.get('/ranking', { schema: ranking.getSchema }, ranking.getController)
+server.post(
+  '/ranking',
+  { schema: ranking.postSchema, preHandler: authByTOTP },
+  ranking.postController
+)
 
 // server setup
 

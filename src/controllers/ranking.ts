@@ -1,48 +1,33 @@
 import { FastifySchema, FastifyRequest, FastifyReply } from 'fastify'
-import { getRanking } from '@/services/ranking'
+import { AuthenticationHeaders, authenticationSchema } from '@/auth/headers'
+import { addRanking } from '@/services/ranking'
 
-interface GetQueryString {
-  position?: number
-  positionStart?: number
-  positionEnd?: number
-  name?: string
-  gradeAndClass?: string
-  points?: number
+interface PostBody {
+  name: string
+  gradeAndClass: string
+  score: number
 }
 
-const getSchema: FastifySchema = {
-  querystring: {
+const postSchema: FastifySchema = {
+  ...authenticationSchema,
+  body: {
     type: 'object',
+    required: ['name', 'gradeAndClass', 'score'],
     properties: {
-      position: { type: 'number' },
-      positionStart: { type: 'number' },
-      positionEnd: { type: 'number' },
       name: { type: 'string' },
       gradeAndClass: { type: 'string' },
-      points: { type: 'number' },
+      score: { type: 'number' },
     },
   },
 }
 
-const getController = async (
-  request: FastifyRequest<{
-    Querystring: GetQueryString
-  }>,
+const postController = async (
+  request: FastifyRequest<{ Headers: AuthenticationHeaders; Body: PostBody }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
-  const { position, positionStart, positionEnd, name, gradeAndClass, points } =
-    request.query
-
-  const result = await getRanking({
-    position,
-    positionStart,
-    positionEnd,
-    name,
-    gradeAndClass,
-    points,
-  })
-
+  const { name, gradeAndClass, score } = request.body
+  const result = await addRanking(name, gradeAndClass, score)
   return result.send(reply)
 }
 
-export { getSchema, getController }
+export { postSchema, postController }
