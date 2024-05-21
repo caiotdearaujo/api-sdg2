@@ -84,4 +84,30 @@ const addRanking = async (
   return new ConventionalReply(201, { data: { position: rightPosition } })
 }
 
-export { addRanking }
+const verifyId = (id: number): boolean => {
+  return id > 0 && Number.isInteger(id)
+}
+
+const getRankingById = async (id: number): Promise<ConventionalReply> => {
+  if (!verifyId(id)) {
+    return new ConventionalReply(400, {
+      error: {
+        message: 'Invalid ID',
+      },
+    })
+  }
+
+  const ranking = await prisma.ranking.findUnique({ where: { id } })
+
+  if (!ranking) {
+    return new ConventionalReply(404, {
+      error: {
+        message: 'Ranking not found',
+      },
+    })
+  }
+
+  return new ConventionalReply(200, { data: ranking })
+}
+
+export { addRanking, getRankingById }

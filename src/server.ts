@@ -62,6 +62,12 @@ server.delete(
 
 // /ranking
 
+server.get(
+  '/ranking/:id',
+  { schema: ranking.getByIdSchema, preHandler: authByTOTP },
+  ranking.getByIdController
+)
+
 server.post(
   '/ranking',
   { schema: ranking.postSchema, preHandler: authByTOTP },

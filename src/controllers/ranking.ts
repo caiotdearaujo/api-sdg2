@@ -1,6 +1,6 @@
 import { FastifySchema, FastifyRequest, FastifyReply } from 'fastify'
 import { AuthenticationHeaders, authenticationSchema } from '@/auth/headers'
-import { addRanking } from '@/services/ranking'
+import { addRanking, getRankingById } from '@/services/ranking'
 
 interface PostBody {
   name: string
@@ -30,4 +30,31 @@ const postController = async (
   return result.send(reply)
 }
 
-export { postSchema, postController }
+interface GetByIdParams {
+  id: number
+}
+
+const getByIdSchema: FastifySchema = {
+  ...authenticationSchema,
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: { type: 'number' },
+    },
+  },
+}
+
+const getByIdController = async (
+  request: FastifyRequest<{
+    Headers: AuthenticationHeaders
+    Params: GetByIdParams
+  }>,
+  reply: FastifyReply
+): Promise<FastifyReply> => {
+  const { id } = request.params
+  const result = await getRankingById(id)
+  return result.send(reply)
+}
+
+export { postSchema, postController, getByIdSchema, getByIdController }
