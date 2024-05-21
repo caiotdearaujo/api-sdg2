@@ -1,10 +1,20 @@
 import ConventionalReply from '@/reply-convention'
 import prisma from '@/prisma-instance'
 
+/**
+ * Verifies if the name is valid.
+ * @param name - The name to be verified.
+ * @returns A boolean indicating whether the name is valid or not.
+ */
 const verifyName = (name: string): boolean => {
   return name.length <= 64 && name.length > 0 && /^[a-zA-Z0-9 ]+$/.test(name)
 }
 
+/**
+ * Verifies if the grade and class are valid.
+ * @param gradeAndClass - The grade and class to be verified.
+ * @returns A boolean indicating whether the grade and class are valid or not.
+ */
 const verifyGradeAndClass = (gradeAndClass: string): boolean => {
   return (
     ['1', '2', '3'].includes(gradeAndClass[0]) &&
@@ -12,10 +22,22 @@ const verifyGradeAndClass = (gradeAndClass: string): boolean => {
   )
 }
 
+/**
+ * Verifies if the score is valid.
+ * @param score - The score to be verified.
+ * @returns A boolean indicating whether the score is valid or not.
+ */
 const verifyScore = (score: number): boolean => {
   return score >= 0 && Number.isInteger(score)
 }
 
+/**
+ * Adds a ranking entry.
+ * @param name - The name of the player.
+ * @param gradeAndClass - The grade and class of the player.
+ * @param score - The score of the player.
+ * @returns A promise that resolves to a ConventionalReply object.
+ */
 const addRanking = async (
   name: string,
   gradeAndClass: string,
@@ -84,10 +106,20 @@ const addRanking = async (
   return new ConventionalReply(201, { data: { position: rightPosition } })
 }
 
+/**
+ * Verifies if the ID is valid.
+ * @param id - The ID to be verified.
+ * @returns A boolean indicating whether the ID is valid or not.
+ */
 const verifyId = (id: number): boolean => {
   return id > 0 && Number.isInteger(id)
 }
 
+/**
+ * Retrieves a ranking entry by ID.
+ * @param id - The ID of the ranking entry.
+ * @returns A promise that resolves to a ConventionalReply object.
+ */
 const getRankingById = async (id: number): Promise<ConventionalReply> => {
   if (!verifyId(id)) {
     return new ConventionalReply(400, {
@@ -110,6 +142,12 @@ const getRankingById = async (id: number): Promise<ConventionalReply> => {
   return new ConventionalReply(200, { data: ranking })
 }
 
+/**
+ * Verifies if the range is valid.
+ * @param rangeStart - The start of the range.
+ * @param rangeEnd - The end of the range.
+ * @returns A boolean indicating whether the range is valid or not.
+ */
 const verifyRange = (rangeStart: number, rangeEnd: number): boolean => {
   return (
     Number.isInteger(rangeStart) &&
@@ -120,6 +158,12 @@ const verifyRange = (rangeStart: number, rangeEnd: number): boolean => {
   )
 }
 
+/**
+ * Retrieves a range of ranking entries.
+ * @param rangeStart - The start of the range (optional).
+ * @param rangeEnd - The end of the range (optional).
+ * @returns A promise that resolves to a ConventionalReply object.
+ */
 const getRanking = async (
   rangeStart?: number,
   rangeEnd?: number

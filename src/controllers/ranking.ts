@@ -21,6 +21,12 @@ const postSchema: FastifySchema = {
   },
 }
 
+/**
+ * Handles the POST /ranking endpoint.
+ * @param request - The Fastify request object.
+ * @param reply - The Fastify reply object.
+ * @returns A promise that resolves to the Fastify reply.
+ */
 const postController = async (
   request: FastifyRequest<{ Headers: AuthenticationHeaders; Body: PostBody }>,
   reply: FastifyReply
@@ -45,6 +51,12 @@ const getByIdSchema: FastifySchema = {
   },
 }
 
+/**
+ * Handles the GET /ranking/:id endpoint.
+ * @param request - The Fastify request object.
+ * @param reply - The Fastify reply object.
+ * @returns A promise that resolves to the Fastify reply.
+ */
 const getByIdController = async (
   request: FastifyRequest<{
     Headers: AuthenticationHeaders
@@ -73,6 +85,12 @@ const getSchema: FastifySchema = {
   },
 }
 
+/**
+ * Handles the GET /ranking endpoint.
+ * @param request - The Fastify request object.
+ * @param reply - The Fastify reply object.
+ * @returns A promise that resolves to the Fastify reply.
+ */
 const getController = async (
   request: FastifyRequest<{
     Headers: AuthenticationHeaders
