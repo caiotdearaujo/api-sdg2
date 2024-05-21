@@ -1,6 +1,6 @@
 import { FastifySchema, FastifyRequest, FastifyReply } from 'fastify'
 import { AuthenticationHeaders, authenticationSchema } from '@/auth/headers'
-import { addRanking, getRankingById } from '@/services/ranking'
+import { addRanking, getRankingById, getRanking } from '@/services/ranking'
 
 interface PostBody {
   name: string
@@ -57,4 +57,39 @@ const getByIdController = async (
   return result.send(reply)
 }
 
-export { postSchema, postController, getByIdSchema, getByIdController }
+interface GetQueryString {
+  rangeStart?: number
+  rangeEnd?: number
+}
+
+const getSchema: FastifySchema = {
+  ...authenticationSchema,
+  querystring: {
+    type: 'object',
+    properties: {
+      rangeStart: { type: 'number' },
+      rangeEnd: { type: 'number' },
+    },
+  },
+}
+
+const getController = async (
+  request: FastifyRequest<{
+    Headers: AuthenticationHeaders
+    Querystring: GetQueryString
+  }>,
+  reply: FastifyReply
+): Promise<FastifyReply> => {
+  const { rangeStart, rangeEnd } = request.query
+  const result = await getRanking(rangeStart, rangeEnd)
+  return result.send(reply)
+}
+
+export {
+  postSchema,
+  postController,
+  getByIdSchema,
+  getByIdController,
+  getSchema,
+  getController,
+}

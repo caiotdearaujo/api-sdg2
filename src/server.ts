@@ -68,6 +68,12 @@ server.get(
   ranking.getByIdController
 )
 
+server.get(
+  '/ranking',
+  { schema: ranking.getSchema, preHandler: authByTOTP },
+  ranking.getController
+)
+
 server.post(
   '/ranking',
   { schema: ranking.postSchema, preHandler: authByTOTP },

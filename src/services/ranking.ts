@@ -110,4 +110,38 @@ const getRankingById = async (id: number): Promise<ConventionalReply> => {
   return new ConventionalReply(200, { data: ranking })
 }
 
-export { addRanking, getRankingById }
+const verifyRange = (rangeStart: number, rangeEnd: number): boolean => {
+  return (
+    Number.isInteger(rangeStart) &&
+    Number.isInteger(rangeEnd) &&
+    rangeStart > 0 &&
+    rangeEnd > 0 &&
+    rangeStart <= rangeEnd
+  )
+}
+
+const getRanking = async (
+  rangeStart?: number,
+  rangeEnd?: number
+): Promise<ConventionalReply> => {
+  const rankings = await prisma.ranking.findMany()
+
+  rangeStart = rangeStart || 1
+  rangeEnd = rangeEnd || rankings.length
+
+  if (!verifyRange(rangeStart, rangeEnd)) {
+    return new ConventionalReply(400, {
+      error: {
+        message: 'Invalid range',
+      },
+    })
+  }
+
+  const result = rankings.filter(
+    (ranking) => ranking.position >= rangeStart && ranking.position <= rangeEnd
+  )
+
+  return new ConventionalReply(200, { data: result })
+}
+
+export { addRanking, getRankingById, getRanking }
