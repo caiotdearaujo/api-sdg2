@@ -64,13 +64,13 @@ server.delete(
 
 server.get(
   '/ranking/:id',
-  { schema: ranking.getByIdSchema, preHandler: authByTOTP },
+  { schema: ranking.getByIdSchema },
   ranking.getByIdController
 )
 
 server.get(
   '/ranking',
-  { schema: ranking.getSchema, preHandler: authByTOTP },
+  { schema: ranking.getSchema },
   ranking.getController
 )
 
