@@ -53,14 +53,13 @@ interface PostBody {
   title: string
   answers: { content: string; correct: boolean }[]
   level: number
-  time: number
 }
 
 const postSchema: FastifySchema = {
   ...authenticationSchema,
   body: {
     type: 'object',
-    required: ['title', 'answers', 'level', 'time'],
+    required: ['title', 'answers', 'level'],
     properties: {
       title: { type: 'string' },
       answers: {
@@ -75,7 +74,6 @@ const postSchema: FastifySchema = {
         },
       },
       level: { type: 'number' },
-      time: { type: 'number' },
     },
   },
 }
@@ -112,7 +110,6 @@ interface PutBody {
   title: string
   answers: { id: number; content: string; correct: boolean }[]
   level: number
-  time: number
 }
 
 const putSchema: FastifySchema = {
@@ -126,7 +123,7 @@ const putSchema: FastifySchema = {
   },
   body: {
     type: 'object',
-    required: ['title', 'answers', 'level', 'time'],
+    required: ['title', 'answers', 'level'],
     properties: {
       title: { type: 'string' },
       answers: {
@@ -142,7 +139,6 @@ const putSchema: FastifySchema = {
         },
       },
       level: { type: 'number' },
-      time: { type: 'number' },
     },
   },
 }

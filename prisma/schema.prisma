@@ -27,7 +27,6 @@ model Question {
   lastEditorUsername String   @db.VarChar(64)
   answers            Answer[]
   level              Int
-  time               Int
 }
 
 model Answer {

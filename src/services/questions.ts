@@ -12,7 +12,6 @@ type questionsAndAnswersType = {
     correct: boolean
   }[]
   level: number
-  time: number
 }[]
 
 /**
@@ -23,16 +22,6 @@ type questionsAndAnswersType = {
  */
 const verifyLevel = (level: number): boolean => {
   return [1, 2, 3, 4].includes(level)
-}
-
-/**
- * Verifies if the given time is greater than zero.
- *
- * @param time - The time to be verified.
- * @returns `true` if the time is greater than zero, `false` otherwise.
- */
-const verifyTime = (time: number): boolean => {
-  return time > 0
 }
 
 /**
@@ -168,21 +157,14 @@ const addQuestion = async (
     title: string
     answers: { content: string; correct: boolean }[]
     level: number
-    time: number
   },
   id: string
 ): Promise<ConventionalReply> => {
-  const { title, answers, level, time } = question
+  const { title, answers, level } = question
 
   if (!verifyLevel(level)) {
     return new ConventionalReply(400, {
       error: { message: 'Invalid level' },
-    })
-  }
-
-  if (!verifyTime(time)) {
-    return new ConventionalReply(400, {
-      error: { message: 'Invalid time' },
     })
   }
 
@@ -192,7 +174,6 @@ const addQuestion = async (
       lastEditor: { connect: { id } },
       answers: { createMany: { data: answers } },
       level,
-      time,
     },
   })
 
@@ -214,22 +195,15 @@ const updateQuestion = async (
     title: string
     answers: { id: number; content: string; correct: boolean }[]
     level: number
-    time: number
   },
   editorId: string
 ): Promise<ConventionalReply> => {
-  const { id, title, answers, level, time } = question
+  const { id, title, answers, level } = question
   const answersIds = answers.map((answer) => answer.id)
 
   if (!verifyLevel(level)) {
     return new ConventionalReply(400, {
       error: { message: 'Invalid level' },
-    })
-  }
-
-  if (!verifyTime(time)) {
-    return new ConventionalReply(400, {
-      error: { message: 'Invalid time' },
     })
   }
 
@@ -240,13 +214,13 @@ const updateQuestion = async (
   }
 
   await prisma.answer.deleteMany({ where: { questionId: id } })
+
   await prisma.question.update({
     where: { id },
     data: {
       title,
       lastEditor: { connect: { id: editorId } },
       level,
-      time,
     },
   })
 
