@@ -44,3 +44,10 @@ model Ranking {
   gradeAndClass String @db.Char(2)
   score         Int
 }
+
+model RestrictedRoute {
+  id      Int      @id @default(autoincrement())
+  method  String
+  url     String
+  origins String[]
+}

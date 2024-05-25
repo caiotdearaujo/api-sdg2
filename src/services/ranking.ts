@@ -67,31 +67,35 @@ const addRanking = async (
     })
   }
 
+  let rightPosition = 1
+
   const positionsAndPoints = await prisma.ranking.findMany({
     select: { position: true, score: true },
     orderBy: { position: 'asc' },
   })
 
-  let rightPosition = 0
-
-  for (const positionAndPoint of positionsAndPoints) {
-    if (positionAndPoint.score < score) {
-      rightPosition = positionAndPoint.position
-      break
+  if (positionsAndPoints.length !== 0) {
+    for (let i = 0; i < positionsAndPoints.length; i++) {
+      if (positionsAndPoints[i].score > score) {
+        rightPosition = positionsAndPoints[i].position
+        break
+      } else if (positionsAndPoints[i].score === score) {
+        rightPosition = positionsAndPoints[i].position + 1
+      }
     }
-  }
 
-  for (
-    let i = positionsAndPoints[positionsAndPoints.length - 1].position;
-    i >= rightPosition;
-    i--
-  ) {
-    await prisma.ranking.update({
-      where: { position: i },
-      data: {
-        position: i + 1,
-      },
-    })
+    for (
+      let i = positionsAndPoints[positionsAndPoints.length - 1].position;
+      i >= rightPosition;
+      i--
+    ) {
+      await prisma.ranking.update({
+        where: { position: i },
+        data: {
+          position: i + 1,
+        },
+      })
+    }
   }
 
   await prisma.ranking.create({
@@ -168,7 +172,13 @@ const getRanking = async (
   rangeStart?: number,
   rangeEnd?: number
 ): Promise<ConventionalReply> => {
-  const rankings = await prisma.ranking.findMany()
+  const rankings = await prisma.ranking.findMany({
+    orderBy: { position: 'asc' },
+  })
+
+  if (rankings.length === 0) {
+    return new ConventionalReply(200, { data: [] })
+  }
 
   rangeStart = rangeStart || 1
   rangeEnd = rangeEnd || rankings.length

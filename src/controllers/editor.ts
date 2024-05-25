@@ -36,7 +36,9 @@ const postController = async (
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { username, password } = request.body
+
   const result = await addEditor(username, password)
+
   return result.send(reply)
 }
 
@@ -60,6 +62,7 @@ const deleteController = async (
   }
 
   const id = await decodeToken(token)
+
   const result = await deleteEditor(id)
 
   return result.send(reply)

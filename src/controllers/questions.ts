@@ -19,7 +19,6 @@ interface GetQueryString {
 }
 
 const getSchema: FastifySchema = {
-  ...authenticationSchema,
   querystring: {
     type: 'object',
     properties: {
@@ -38,14 +37,13 @@ const getSchema: FastifySchema = {
  * @returns A Promise that resolves to the Fastify reply object.
  */
 const getController = async (
-  request: FastifyRequest<{
-    Headers: AuthenticationHeaders
-    Querystring: GetQueryString
-  }>,
+  request: FastifyRequest<{ Querystring: GetQueryString }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { id, search, level } = request.query
+
   const result = await getQuestions({ id, search, level })
+
   return result.send(reply)
 }
 
@@ -99,6 +97,7 @@ const postController = async (
   const question = request.body
 
   const result = await addQuestion(question, id)
+
   return result.send(reply)
 }
 
@@ -170,6 +169,7 @@ const putController = async (
   const question = { id: questionId, ...questionContent }
 
   const result = await updateQuestion(question, id)
+
   return result.send(reply)
 }
 
@@ -196,7 +196,9 @@ const deleteController = async (
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const id = request.params.id
+
   const result = await deleteQuestion(id)
+
   return result.send(reply)
 }
 

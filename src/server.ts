@@ -2,7 +2,6 @@ import server from './fastify-instance'
 import prisma from './prisma-instance'
 import dotenv from 'dotenv'
 import authByJWT from './auth/jwt'
-import authByTOTP from './auth/totp'
 import * as ping from './controllers/ping'
 import * as editors from './controllers/editor'
 import * as login from './controllers/login'
@@ -38,7 +37,7 @@ server.post('/login', { schema: login.postSchema }, login.postController)
 
 server.get(
   '/questions',
-  { schema: questions.getSchema, preHandler: authByTOTP },
+  { schema: questions.getSchema },
   questions.getController
 )
 
@@ -68,17 +67,9 @@ server.get(
   ranking.getByIdController
 )
 
-server.get(
-  '/ranking',
-  { schema: ranking.getSchema },
-  ranking.getController
-)
+server.get('/ranking', { schema: ranking.getSchema }, ranking.getController)
 
-server.post(
-  '/ranking',
-  { schema: ranking.postSchema, preHandler: authByTOTP },
-  ranking.postController
-)
+server.post('/ranking', { schema: ranking.postSchema }, ranking.postController)
 
 // server setup
 
@@ -86,7 +77,7 @@ const start = async () => {
   try {
     await prisma.$connect()
     await server.listen({
-      port: process.env.PORT ? Number(process.env.PORT) : 3000,
+      port: process.env.PORT ? Number(process.env.PORT) : 3333,
     })
   } catch (err) {
     server.log.error(err)

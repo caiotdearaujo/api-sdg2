@@ -1,5 +1,4 @@
 import { FastifySchema, FastifyRequest, FastifyReply } from 'fastify'
-import { AuthenticationHeaders, authenticationSchema } from '@/auth/headers'
 import { addRanking, getRankingById, getRanking } from '@/services/ranking'
 
 interface PostBody {
@@ -9,7 +8,6 @@ interface PostBody {
 }
 
 const postSchema: FastifySchema = {
-  ...authenticationSchema,
   body: {
     type: 'object',
     required: ['name', 'gradeAndClass', 'score'],
@@ -28,11 +26,13 @@ const postSchema: FastifySchema = {
  * @returns A promise that resolves to the Fastify reply.
  */
 const postController = async (
-  request: FastifyRequest<{ Headers: AuthenticationHeaders; Body: PostBody }>,
+  request: FastifyRequest<{ Body: PostBody }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { name, gradeAndClass, score } = request.body
+
   const result = await addRanking(name, gradeAndClass, score)
+
   return result.send(reply)
 }
 
@@ -41,7 +41,6 @@ interface GetByIdParams {
 }
 
 const getByIdSchema: FastifySchema = {
-  ...authenticationSchema,
   params: {
     type: 'object',
     required: ['id'],
@@ -58,14 +57,13 @@ const getByIdSchema: FastifySchema = {
  * @returns A promise that resolves to the Fastify reply.
  */
 const getByIdController = async (
-  request: FastifyRequest<{
-    Headers: AuthenticationHeaders
-    Params: GetByIdParams
-  }>,
+  request: FastifyRequest<{ Params: GetByIdParams }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { id } = request.params
+
   const result = await getRankingById(id)
+
   return result.send(reply)
 }
 
@@ -75,7 +73,6 @@ interface GetQueryString {
 }
 
 const getSchema: FastifySchema = {
-  ...authenticationSchema,
   querystring: {
     type: 'object',
     properties: {
@@ -92,14 +89,13 @@ const getSchema: FastifySchema = {
  * @returns A promise that resolves to the Fastify reply.
  */
 const getController = async (
-  request: FastifyRequest<{
-    Headers: AuthenticationHeaders
-    Querystring: GetQueryString
-  }>,
+  request: FastifyRequest<{ Querystring: GetQueryString }>,
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { rangeStart, rangeEnd } = request.query
+
   const result = await getRanking(rangeStart, rangeEnd)
+
   return result.send(reply)
 }
 

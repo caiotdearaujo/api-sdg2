@@ -29,7 +29,9 @@ const postController = async (
   reply: FastifyReply
 ): Promise<FastifyReply> => {
   const { username, password } = request.body
+
   const result = await login(username, password)
+
   return result.send(reply)
 }
 
