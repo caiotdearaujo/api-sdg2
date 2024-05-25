@@ -77,7 +77,7 @@ const start = async () => {
   try {
     await prisma.$connect()
     await server.listen({
-      port: process.env.PORT ? Number(process.env.PORT) : 3333,
+      port: process.env.PORT ? Number(process.env.PORT) : 3000,
     })
   } catch (err) {
     server.log.error(err)
