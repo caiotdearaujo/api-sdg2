@@ -41,7 +41,7 @@ model Ranking {
   id            Int    @id @default(autoincrement())
   position      Int    @unique
   name          String @db.VarChar(255)
-  gradeAndClass String @db.Char(2)
+  gradeAndClass String @db.VarChar(8)
   score         Int
 }
 
