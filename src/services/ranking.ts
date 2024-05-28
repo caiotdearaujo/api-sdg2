@@ -67,47 +67,38 @@ const addRanking = async (
     })
   }
 
-  let rightPosition = 1
+  let position: number
 
-  const positionsAndPoints = await prisma.ranking.findMany({
+  const currentRanking = await prisma.ranking.findMany({
     select: { position: true, score: true },
     orderBy: { position: 'asc' },
   })
 
-  if (positionsAndPoints.length !== 0) {
-    for (let i = 0; i < positionsAndPoints.length; i++) {
-      if (positionsAndPoints[i].score > score) {
-        rightPosition = positionsAndPoints[i].position
-        break
-      } else if (positionsAndPoints[i].score === score) {
-        rightPosition = positionsAndPoints[i].position + 1
-      }
+  if (!currentRanking) {
+    position = 1
+  } else {
+    let i = currentRanking.length - 1
+    while (score > currentRanking[i].score && i >= 0) i--
+
+    let j = currentRanking.length - 1
+    while (j >= i + 1) {
+      await prisma.ranking.update({
+        where: { position: currentRanking[j].position },
+        data: { position: currentRanking[j].position + 1 },
+      })
+
+      j--
     }
 
-    for (
-      let i = positionsAndPoints[positionsAndPoints.length - 1].position;
-      i >= rightPosition;
-      i--
-    ) {
-      await prisma.ranking.update({
-        where: { position: i },
-        data: {
-          position: i + 1,
-        },
-      })
-    }
+    position = i + 2
   }
 
-  await prisma.ranking.create({
-    data: {
-      name,
-      gradeAndClass,
-      score,
-      position: rightPosition,
-    },
+  const id = await prisma.ranking.create({
+    data: { position, name, gradeAndClass, score },
+    select: { id: true },
   })
 
-  return new ConventionalReply(201, { data: { position: rightPosition } })
+  return new ConventionalReply(201, { data: { id } })
 }
 
 /**
