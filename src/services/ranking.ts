@@ -7,7 +7,7 @@ import prisma from '@/prisma-instance'
  * @returns A boolean indicating whether the name is valid or not.
  */
 const verifyName = (name: string): boolean => {
-  return name.length <= 64 && name.length > 0 && /^[a-zA-Z0-9 ]+$/.test(name)
+  return /^[a-zÀ-ÖØ-öø-ÿ0-9\s]+{1,64}$/i.test(name)
 }
 
 /**
@@ -16,10 +16,9 @@ const verifyName = (name: string): boolean => {
  * @returns A boolean indicating whether the grade and class are valid or not.
  */
 const verifyGradeAndClass = (gradeAndClass: string): boolean => {
-  return (
-    ['1', '2', '3'].includes(gradeAndClass[0]) &&
-    ['A', 'B', 'C'].includes(gradeAndClass[1].toUpperCase())
-  )
+  const rightFormat = /^[1-3][A-C]{2}$/i.test(gradeAndClass.toUpperCase())
+  const teacher = gradeAndClass.toUpperCase() === 'PROFESSOR'
+  return rightFormat || teacher
 }
 
 /**
