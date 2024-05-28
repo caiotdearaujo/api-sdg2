@@ -74,11 +74,11 @@ const addRanking = async (
     orderBy: { position: 'asc' },
   })
 
-  if (!currentRanking) {
+  if (currentRanking.length === 0) {
     position = 1
   } else {
     let i = currentRanking.length - 1
-    while (score > currentRanking[i].score && i >= 0) i--
+    while (i >= 0 && score > currentRanking[i].score) i--
 
     let j = currentRanking.length - 1
     while (j >= i + 1) {
@@ -86,7 +86,6 @@ const addRanking = async (
         where: { position: currentRanking[j].position },
         data: { position: currentRanking[j].position + 1 },
       })
-
       j--
     }
 
