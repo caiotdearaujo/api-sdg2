@@ -40,7 +40,7 @@ model Answer {
 model Ranking {
   id            Int    @id @default(autoincrement())
   position      Int    @unique
-  name          String @db.VarChar(64)
+  name          String @db.VarChar(255)
   gradeAndClass String @db.Char(2)
   score         Int
 }
