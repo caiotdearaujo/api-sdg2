@@ -7,7 +7,7 @@ import prisma from '@/prisma-instance'
  * @returns A boolean indicating whether the name is valid or not.
  */
 const verifyName = (name: string): boolean => {
-  return /^[A-Za-zÀ-ÖØ-öø-ÿ\s]{1,64}$/.test(name)
+  return name.length > 0 && name.length <= 255
 }
 
 /**
