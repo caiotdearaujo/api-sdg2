@@ -16,9 +16,18 @@ const verifyName = (name: string): boolean => {
  * @returns A boolean indicating whether the grade and class are valid or not.
  */
 const verifyGradeAndClass = (gradeAndClass: string): boolean => {
-  const rightFormat = /^[1-3][A-C]{2}$/i.test(gradeAndClass.toUpperCase())
-  const teacher = gradeAndClass.toUpperCase() === 'PROFESSOR'
-  return rightFormat || teacher
+  return [
+    '1A',
+    '1B',
+    '1C',
+    '2A',
+    '2B',
+    '2C',
+    '3A',
+    '3B',
+    '3C',
+    'PROFESSOR',
+  ].includes(gradeAndClass)
 }
 
 /**
